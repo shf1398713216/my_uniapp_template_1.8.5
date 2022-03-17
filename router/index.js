@@ -1,23 +1,33 @@
-import Vue from 'vue'
-import uniCrazyRouter from "uni-crazy-router";
-Vue.use(uniCrazyRouter)
+import {
+	RouterMount,
+	createRouter
+} from 'uni-simple-router';
 
-uniCrazyRouter.beforeEach(async (to, from ,next)=>{
-    // 逻辑代码
-    console.log("前置拦截执行",to)
-    console.log("前置拦截执行",from)
+const router = createRouter({
+	platform: process.env.VUE_APP_PLATFORM,
+	routes: [...ROUTES]
+});
+//全局路由前置守卫
+router.beforeEach((to, from, next) => {
+	var ignoreArray = ["/pages/test_page/test_page", "/pages/index/index"];
 
-
-    next();
+	//有token或者不拦截的路径,可以跳转,否则跳某个登录页面
+	if (uni.getStorageSync("token") == '333' ||
+		ignoreArray.indexOf( to.path) != -1) {
+		next();
+	} else {
+		uni.navigateTo({
+			url: '/pages/test_page/test_page'
+		});
+	}
+ 
+});
+// 全局路由后置守卫
+router.afterEach((to, from) => {
+	// console.log('全局路由后置守卫')
 })
 
-uniCrazyRouter.afterEach((to, from)=>{
-    // 逻辑代码
-    console.log("后置拦截执行",to)
-    console.log("后置拦截执行",from)
-
-})
-
-uniCrazyRouter['on'+'Error']((to, from)=>{
-    // 逻辑代码
-})
+export {
+	router,
+	RouterMount
+}
