@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import App from './App'
 import store from '@/store'
+// 引入路由
+import './router'
 let vuexStore = require("@/store/$u.mixin.js")
 Vue.config.productionTip = false
 
